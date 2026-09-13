@@ -67,3 +67,4 @@ design_handoff_papervoice/   the original design spec
 - **Simulator.** The iOS Simulator has no camera. There, the shutter opens the photo library instead.
 - **Letter photos.** Letters are sent to Google, and the generated script is sent to ElevenLabs. Mention this in your privacy policy before release.
 # papervoice
+# papervoice
