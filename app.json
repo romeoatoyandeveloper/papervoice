@@ -1,25 +1,51 @@
 {
   "expo": {
-    "name": "pv-tmp",
-    "slug": "pv-tmp",
+    "name": "PaperVoice",
+    "slug": "papervoice",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.papervoice.app"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#f5ead8",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.papervoice.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-audio",
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "PaperVoice uses the camera to photograph your letters so they can be explained and read aloud.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PaperVoice lets you pick a photo of a letter from your library."
+        }
+      ]
+    ],
+    "scheme": "papervoice",
+    "backgroundColor": "#f5ead8",
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

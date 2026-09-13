@@ -1,6 +1,6 @@
 # PaperVoice
 
-Photograph an official letter and hear it explained in your own language: Armenian by default, or Dutch, English, Russian or French.
+Photograph an official letter and hear it explained in Armenian.
 
 Built with Expo SDK 57, TypeScript and expo-router. Google Gemini reads and explains the letter, and ElevenLabs turns the explanation into speech.
 
@@ -32,39 +32,61 @@ If you edit `.env`, restart with `npx expo start --clear`. The keys are compiled
 
 | Label | Stage |
 | --- | --- |
-| Reading document... | The photo goes to Gemini (`src/services/gemini.ts`), which returns structured JSON: `documentTitle`, `status`, `amountDue`, `deadline`, `paymentDetails` (recipient, IBAN, BIC, reference), `letterDetails` (sender, case numbers, contacts), `spokenScript`, `spokenLanguage`. |
+| Reading document... | The photo goes to Gemini (`src/services/gemini.ts`), which classifies the letter and returns structured JSON: `documentType`, `documentTitle`, `statusLabel`, `fields` (`label`, `value`, `kind`, `isPlate`), `paymentDetails` (recipient, IBAN, BIC, reference), `spokenScript`, `spokenLanguage`. |
 | Translating to {language}... | `spokenScript` goes to ElevenLabs (`src/services/elevenlabs.ts`), and the MP3 is saved to the cache directory. |
 | Generating voice... | The file is loaded into an `expo-audio` player. Once it's ready, playback starts and the Result sheet opens. |
 
 If a stage fails, the screen shows a plain-language message with **Try Again** and **Retake Photo**. Try Again restarts at the stage that failed, so a failed voice step doesn't send the photo to Gemini again.
 
-AsyncStorage keeps three settings: `onboardingComplete`, `selectedLanguage` and `selectedVoice`.
+### Letter types
+
+The taxonomy is defined in `src/documentTypes.ts`. The Gemini prompt and the Result screen's Document card both read from it:
+
+Card text is Armenian written in Latin letters ("Armenglish"). The status tag and fixed labels live in code, and Gemini transliterates free-text values.
+
+| `documentType` | Tag | Fields |
+| --- | --- | --- |
+| `municipal_tax` | Petk a mucvi | Pox, Vcharman kod, Minchev erb |
+| `fine` | Tugank | Tugani pox, Inchi hamar, Minchev erb |
+| `parking_fine` | Tugank | Hamaranish, Pox, Vortex, Erb, Minchev erb |
+| `speeding_fine` | Tugank | Hamaranish, Pox, Aragutyun, Vortex, Erb, Minchev erb |
+| `tax_refund` | Veradardz | Het kstanas, Erb kga, Hamar |
+| `jury_duty` | Petk a pataxanel | Or u zham, Vortex, Pataxani minchev |
+| `permit_renewal` | Petk a erkarel | Prcnum a, Erkari minchev, Vortex |
+| `car_tax` | Petk a mucvi | Hamaranish, Pox, Minchev erb |
+| `car_insurance` | Petk a erkarel | Hamaranish, Pox, Erkari minchev |
+| `other` | Uxaki imanas | Free-form: the 3–6 facts that matter most |
+
+A row with `isPlate: true` is drawn as a Belgian license plate. Tapping an amount, reference or plate copies it. To add a letter type, add an entry to `DOCUMENT_TYPES`.
+
+AsyncStorage keeps one setting: `selectedVoice`. Armenian is the only language for now; it's defined as `LANGUAGE` in `src/config.ts`.
 
 ## Project layout
 
 ```
 app/                    expo-router screens
   _layout.tsx           fonts, providers, stack
-  index.tsx             sends the user to onboarding or the camera
-  onboarding.tsx        language choice (first launch only)
-  camera.tsx            viewfinder, guide brackets, shutter, gallery, torch
+  index.tsx             redirects to the camera
+  camera.tsx            viewfinder, guide brackets, shutter, page tray, photos/PDF picker, torch
   processing.tsx        pulse animation, stage labels, error and retry state
-  result.tsx            bottom sheet: audio player, status line, transcript
-  settings.tsx          bottom sheet: language, voice, sample playback
+  result.tsx            bottom sheet: audio player, Document card, How to Pay, transcript
+  settings.tsx          bottom sheet: voice, sample playback
 src/
   theme.ts              Organic design tokens (colors, fonts, radii, shadows)
-  config.ts             languages, env config, per-language font helper
+  documentTypes.ts      letter taxonomy shared by the prompt and the UI
+  config.ts             Armenian language config, env config, font helper
   services/             Gemini, ElevenLabs, friendly errors
   state/                settings and scan pipeline contexts
   components/           icons, sheet, waveform, pulse rings, buttons
-design_handoff_papervoice/   the original design spec
+design_handoff_papervoice 2/ the current design spec
 ```
 
 ## Notes
 
 - **expo-audio instead of expo-av.** `expo-av` isn't part of SDK 57. `expo-audio` replaces it, and playback speed uses `player.setPlaybackRate`.
 - **Fonts.** Caprasimo, Figtree and Noto Sans Armenian are bundled from `@expo-google-fonts`. Figtree has no Cyrillic, so Russian text uses the system font.
-- **Simulator.** The iOS Simulator has no camera. There, the shutter opens the photo library instead.
+- **Multiple pages and PDFs.** The shutter adds a page to a tray above the controls instead of starting right away, so you can shoot the front and back. **Explain** sends every page (up to 10, about 14 MB total) to Gemini in one request as one letter. The library button offers **Photos** (multi-select) or **PDF file** (`expo-document-picker`).
+- **Simulator.** The iOS Simulator has no camera. There, the shutter opens the Photos/PDF picker instead.
 - **Letter photos.** Letters are sent to Google, and the generated script is sent to ElevenLabs. Mention this in your privacy policy before release.
 # papervoice
 # papervoice

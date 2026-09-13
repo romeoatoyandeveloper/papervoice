@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/organic-1b05b765-4f07-44c9-9979-f0a6bf9eb528/styles.css">
+  <script src="_ds/organic-1b05b765-4f07-44c9-9979-f0a6bf9eb528/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: var(--color-neutral-300); }
+    @keyframes pv-pulse { 0% { transform: scale(0.7); opacity: 0.7; } 100% { transform: scale(1.9); opacity: 0; } }
+    @keyframes pv-fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pv-sheetup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes pv-wave { 0%,100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+  </style>
+</helmet>
+<div style="display:flex; justify-content:center; padding:40px 20px; background:var(--color-neutral-300); min-height:100vh; box-sizing:border-box; font-family:var(--font-body);">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402,874">
+
+  <div style="height:100%; display:flex; flex-direction:column; position:relative; background:var(--color-bg); overflow:hidden;">
+
+    <!-- ONBOARDING -->
+    <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1; display:flex; flex-direction:column; padding:66px 22px 28px; box-sizing:border-box; overflow:auto;">
+        <div style="color:var(--color-text); font-family:var(--font-heading); font-weight:400; font-size:26px; line-height:1.2;">Choose spoken language</div>
+        <div style="color:color-mix(in srgb, var(--color-text) 58%, transparent); font-size:15px; line-height:1.4; margin-top:10px;">All letters will be explained and read aloud to you in this language.</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:28px;">
+          <sc-for list="{{ languages }}" as="lang" hint-placeholder-count="5">
+            <div onClick="{{ lang.select }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:18px; cursor:pointer; background:{{ lang.bg }}; border:1.5px solid {{ lang.border }}; box-shadow:{{ lang.shadow }}; transition:border-color 0.15s, background 0.15s;">
+              <div style="font-size:26px; line-height:1;">{{ lang.flag }}</div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                <div style="color:var(--color-text); font-size:17px; font-weight:600; font-family:'Noto Sans Armenian',var(--font-body);">{{ lang.native }}</div>
+                <div style="color:color-mix(in srgb, var(--color-text) 50%, transparent); font-size:13px;">{{ lang.label }}</div>
+              </div>
+              <sc-if value="{{ lang.selected }}">
+                <div style="width:24px; height:24px; border-radius:999px; background:var(--color-accent); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L4.5 8.5L12 1" stroke="var(--color-bg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="flex:1;"></div>
+        <button onClick="{{ finishOnboarding }}" style="width:100%; padding:17px 0; border-radius:999px; border:none; background:var(--color-accent); color:var(--color-bg); font-size:17px; font-weight:600; font-family:var(--font-heading); margin-top:24px; cursor:pointer;" style-hover="{{ ctaHover }}" style-active="{{ ctaActive }}">Get Started</button>
+      </div>
+    </sc-if>
+
+    <!-- CAMERA -->
+    <sc-if value="{{ isCamera }}">
+      <div style="flex:1; display:flex; flex-direction:column; padding-top:58px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 18px 12px;">
+          <div onClick="{{ openSettings }}" style="display:flex; align-items:center; gap:6px; padding:9px 14px 9px 12px; border-radius:999px; background:var(--color-surface); border:1px solid var(--color-divider); cursor:pointer;">
+            <span style="font-size:16px; color:var(--color-text); font-family:'Noto Sans Armenian',var(--font-body);">{{ activeLanguage.flag }} {{ activeLanguage.native }}</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="color-mix(in srgb, var(--color-text) 55%, transparent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div onClick="{{ openSettings }}" style="width:40px; height:40px; border-radius:999px; background:var(--color-surface); border:1px solid var(--color-divider); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7Z" stroke="var(--color-text)" stroke-width="1.8"/><path d="M19.4 13.5a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.77-.32 1.6 1.6 0 0 0-.97 1.46V19.5a2 2 0 1 1-4 0v-.09a1.6 1.6 0 0 0-1.05-1.47 1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.6 1.6 0 0 0 .32-1.77 1.6 1.6 0 0 0-1.46-.97H4.5a2 2 0 1 1 0-4h.09a1.6 1.6 0 0 0 1.47-1.05 1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.6 1.6 0 0 0 1.77.32H9.5a1.6 1.6 0 0 0 .97-1.46V4.5a2 2 0 1 1 4 0v.09a1.6 1.6 0 0 0 .97 1.46 1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.6 1.6 0 0 0-.32 1.77v.09a1.6 1.6 0 0 0 1.46.97h.09a2 2 0 1 1 0 4h-.09a1.6 1.6 0 0 0-1.46.97Z" stroke="var(--color-text)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div style="flex:1; margin:4px 16px 0; border-radius:26px; position:relative; overflow:hidden; background:linear-gradient(160deg,var(--color-neutral-800),var(--color-neutral-900));">
+          <div style="position:absolute; inset:0; opacity:0.5; background:radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-neutral-100) 10%, transparent), transparent 60%);"></div>
+          <div style="position:absolute; top:16px; left:0; right:0; display:flex; justify-content:center;">
+            <div style="background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); color:var(--color-neutral-100); font-size:13px; font-weight:500; padding:8px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.12);">Fit the letter inside the frame</div>
+          </div>
+          <div style="position:absolute; top:50%; left:50%; width:64%; height:78%; transform:translate(-50%,-50%);">
+            <div style="position:absolute; top:0; left:0; width:34px; height:34px; border-top:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-left:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-radius:6px 0 0 0;"></div>
+            <div style="position:absolute; top:0; right:0; width:34px; height:34px; border-top:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-right:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-radius:0 6px 0 0;"></div>
+            <div style="position:absolute; bottom:0; left:0; width:34px; height:34px; border-bottom:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-left:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-radius:0 0 0 6px;"></div>
+            <div style="position:absolute; bottom:0; right:0; width:34px; height:34px; border-bottom:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-right:3px solid color-mix(in srgb, var(--color-neutral-100) 88%, transparent); border-radius:0 0 6px 0;"></div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 34px 30px;">
+          <div style="width:50px; height:50px; border-radius:16px; background:var(--color-surface); border:1px solid var(--color-divider); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="15" rx="2.5" stroke="var(--color-text)" stroke-width="1.6"/><circle cx="8.5" cy="10.5" r="1.5" fill="var(--color-text)"/><path d="M5 17L9.5 13L13 15.5L17 11.5L21 15.5" stroke="var(--color-text)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div onClick="{{ capturePhoto }}" style="width:80px; height:80px; border-radius:999px; border:3.5px solid color-mix(in srgb, var(--color-text) 55%, transparent); display:flex; align-items:center; justify-content:center; cursor:pointer;" style-active="{{ shutterPressStyle }}">
+            <div style="width:64px; height:64px; border-radius:999px; background:var(--color-accent);"></div>
+          </div>
+          <div onClick="{{ toggleFlash }}" style="width:50px; height:50px; border-radius:16px; background:var(--color-surface); border:1px solid var(--color-divider); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8Z" fill="{{ flashColor }}" stroke="{{ flashColor }}" stroke-width="1"/></svg>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- PROCESSING -->
+    <sc-if value="{{ isProcessing }}">
+      <div style="flex:1; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background:linear-gradient(160deg,var(--color-neutral-800),var(--color-neutral-900)); filter:blur(2px);"></div>
+        <div style="position:absolute; inset:0; background:color-mix(in srgb, var(--color-neutral-900) 60%, transparent); backdrop-filter:blur(14px);"></div>
+        <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:36px;">
+          <div style="position:relative; width:120px; height:120px; display:flex; align-items:center; justify-content:center;">
+            <div style="position:absolute; width:56px; height:56px; border-radius:999px; border:2px solid var(--color-accent-400); animation:pv-pulse 2.2s ease-out infinite;"></div>
+            <div style="position:absolute; width:56px; height:56px; border-radius:999px; border:2px solid var(--color-accent-400); animation:pv-pulse 2.2s ease-out infinite; animation-delay:0.7s;"></div>
+            <div style="position:absolute; width:56px; height:56px; border-radius:999px; border:2px solid var(--color-accent-400); animation:pv-pulse 2.2s ease-out infinite; animation-delay:1.4s;"></div>
+            <div style="width:56px; height:56px; border-radius:999px; background:var(--color-accent); display:flex; align-items:center; justify-content:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="var(--color-bg)" stroke-width="1.8"/><path d="M6 11v1a6 6 0 0 0 12 0v-1M12 18v3" stroke="var(--color-bg)" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div key="{{ processingStep }}" style="color:var(--color-neutral-100); font-size:17px; font-weight:500; animation:pv-fadein 0.4s ease;">{{ processingLabel }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- RESULT -->
+    <sc-if value="{{ isResult }}">
+      <div style="flex:1; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background:linear-gradient(160deg,var(--color-neutral-800),var(--color-neutral-900)); filter:blur(3px) brightness(0.7);"></div>
+
+        <div style="position:absolute; left:0; right:0; bottom:0; height:90%; background:var(--color-bg); border-radius:28px 28px 0 0; box-shadow:var(--shadow-lg); display:flex; flex-direction:column; animation:pv-sheetup 0.35s ease-out;">
+          <div style="display:flex; justify-content:center; padding:10px 0 6px; flex-shrink:0;">
+            <div style="width:36px; height:5px; border-radius:3px; background:color-mix(in srgb, var(--color-text) 22%, transparent);"></div>
+          </div>
+
+          <div style="flex:1; overflow:auto; padding:8px 18px 0;">
+
+            <!-- audio hero card -->
+            <div style="border-radius:22px; background:var(--color-surface); padding:18px; display:flex; flex-direction:column; gap:16px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:6px; background:var(--color-accent-2-100); color:var(--color-accent-2-700); font-size:12px; font-weight:600; padding:5px 10px; border-radius:999px;">
+                  <div style="width:6px; height:6px; border-radius:999px; background:var(--color-accent-2-600);"></div>
+                  Speaking Armenian
+                </div>
+                <div onClick="{{ toggleSpeed }}" style="font-size:13px; font-weight:600; color:var(--color-text); background:var(--color-neutral-100); padding:6px 12px; border-radius:999px; cursor:pointer;">{{ speedLabel }}</div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:2px; height:36px;">
+                <sc-for list="{{ waveBars }}" as="bar" hint-placeholder-count="28">
+                  <div style="flex:1; height:{{ bar.height }}; background:{{ bar.color }}; border-radius:2px; animation:pv-wave 1s ease-in-out infinite; animation-delay:{{ bar.delay }}; animation-play-state:{{ playState }};"></div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:center; gap:28px;">
+                <div style="width:48px; height:48px; border-radius:999px; background:var(--color-neutral-100); display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z" fill="var(--color-text)"/></svg>
+                  <div style="position:absolute; bottom:6px; font-size:8px; font-weight:700; color:var(--color-text);">15</div>
+                </div>
+                <div onClick="{{ togglePlay }}" style="width:64px; height:64px; border-radius:999px; background:var(--color-accent); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                  <sc-if value="{{ playing }}">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="5" width="4" height="14" rx="1" fill="var(--color-bg)"/><rect x="14" y="5" width="4" height="14" rx="1" fill="var(--color-bg)"/></svg>
+                  </sc-if>
+                  <sc-if value="{{ notPlaying }}">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 4.5v15l14-7.5Z" fill="var(--color-bg)"/></svg>
+                  </sc-if>
+                </div>
+                <div style="width:48px; height:48px;"></div>
+              </div>
+            </div>
+
+            <!-- doc type preview switcher (demo only, shows how the card adapts per letter type) -->
+            <div style="display:flex; gap:6px; margin-top:18px; overflow-x:auto; padding-bottom:2px;">
+              <sc-for list="{{ docTypes }}" as="dt" hint-placeholder-count="5">
+                <div onClick="{{ dt.select }}" class="{{ dt.chipClass }}" style="flex-shrink:0; cursor:pointer;">{{ dt.chipLabel }}</div>
+              </sc-for>
+            </div>
+
+            <!-- document card -->
+            <div style="margin-top:10px; border-radius:22px; background:var(--color-surface); padding:18px; display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                <div style="color:var(--color-accent); font-size:11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">Document</div>
+                <div class="{{ activeDocType.tagClass }}">{{ activeDocType.tagLabel }}</div>
+              </div>
+              <div style="color:var(--color-text); font-size:19px; font-weight:600; line-height:1.3;">{{ activeDocType.title }}</div>
+
+              <div style="display:flex; flex-direction:column; margin-top:6px; border-top:1px solid var(--color-divider);">
+                <sc-for list="{{ activeDocType.rows }}" as="row" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 0; border-bottom:1px solid var(--color-divider);">
+                    <div style="color:color-mix(in srgb, var(--color-text) 55%, transparent); font-size:14px; flex-shrink:0;">{{ row.label }}</div>
+                    <sc-if value="{{ row.isPlate }}">
+                      <div style="display:flex; align-items:stretch; border-radius:4px; overflow:hidden; border:2px solid #a6192e; background:#fff;">
+                        <div style="background:#003399; color:#fff; font-size:8px; font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; padding:3px 5px; line-height:1;">
+                          <span style="color:#ffcc00; font-size:9px;">★</span>
+                          <span>B</span>
+                        </div>
+                        <div style="background:#fff; color:#a6192e; font-size:17px; font-weight:800; letter-spacing:1.5px; padding:3px 10px; font-family:Arial,sans-serif;">{{ row.value }}</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ row.notPlate }}">
+                      <div style="color:{{ row.color }}; font-size:{{ row.size }}; font-weight:700; text-align:right;">{{ row.value }}</div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- transcript -->
+            <div style="margin-top:16px; border-radius:22px; background:var(--color-surface); padding:18px; display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 5L6 9H3v6h3l5 4V5Z" fill="color-mix(in srgb, var(--color-text) 55%, transparent)"/><path d="M16 9a4 4 0 0 1 0 6" stroke="color-mix(in srgb, var(--color-text) 55%, transparent)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <div style="color:color-mix(in srgb, var(--color-text) 65%, transparent); font-size:13px; font-weight:600;">Spoken Transcript</div>
+              </div>
+              <div style="color:color-mix(in srgb, var(--color-text) 88%, transparent); font-size:16px; line-height:1.65; font-family:'Noto Sans Armenian',var(--font-body);">{{ transcriptText }}</div>
+            </div>
+
+            <div style="height:14px;"></div>
+          </div>
+
+          <div style="flex-shrink:0; padding:14px 18px; padding-bottom:calc(14px + 20px); background:var(--color-bg); border-top:1px solid var(--color-divider);">
+            <button onClick="{{ scanAnother }}" style="width:100%; padding:16px 0; border-radius:999px; border:none; background:var(--color-accent); color:var(--color-bg); font-size:16px; font-weight:600; font-family:var(--font-heading); cursor:pointer;">Scan Another Letter</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- SETTINGS SHEET -->
+    <sc-if value="{{ showSettings }}">
+      <div onClick="{{ closeSettings }}" style="position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:80;"></div>
+      <div style="position:absolute; left:0; right:0; bottom:0; height:72%; background:var(--color-bg); border-radius:28px 28px 0 0; z-index:81; display:flex; flex-direction:column; animation:pv-sheetup 0.3s ease-out; box-shadow:var(--shadow-lg);">
+        <div style="display:flex; justify-content:center; padding:10px 0 4px;">
+          <div style="width:36px; height:5px; border-radius:3px; background:color-mix(in srgb, var(--color-text) 22%, transparent);"></div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 20px 4px;">
+          <div style="color:var(--color-text); font-family:var(--font-heading); font-weight:400; font-size:20px;">Settings</div>
+          <div onClick="{{ closeSettings }}" style="width:32px; height:32px; border-radius:999px; background:var(--color-surface); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4L20 20M20 4L4 20" stroke="var(--color-text)" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+
+        <div style="flex:1; overflow:auto; padding:12px 20px 24px;">
+          <div style="color:color-mix(in srgb, var(--color-text) 55%, transparent); font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:10px;">Spoken language</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <sc-for list="{{ languages }}" as="lang" hint-placeholder-count="5">
+              <div onClick="{{ lang.select }}" style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:{{ lang.settingsBg }}; cursor:pointer;">
+                <div style="font-size:20px;">{{ lang.flag }}</div>
+                <div style="flex:1; color:var(--color-text); font-size:15px; font-family:'Noto Sans Armenian',var(--font-body);">{{ lang.native }} <span style="color:color-mix(in srgb, var(--color-text) 50%, transparent); font-family:var(--font-body);">· {{ lang.label }}</span></div>
+                <sc-if value="{{ lang.selected }}">
+                  <svg width="16" height="12" viewBox="0 0 13 10" fill="none"><path d="M1 5L4.5 8.5L12 1" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="color:color-mix(in srgb, var(--color-text) 55%, transparent); font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin:22px 0 10px;">Voice</div>
+          <div style="display:flex; gap:8px;">
+            <div onClick="{{ selectVoiceFemale }}" style="flex:1; text-align:center; padding:12px 0; border-radius:14px; background:{{ voiceFemaleBg }}; color:var(--color-text); font-size:14px; font-weight:600; cursor:pointer; border:1px solid {{ voiceFemaleBorder }};">Female</div>
+            <div onClick="{{ selectVoiceMale }}" style="flex:1; text-align:center; padding:12px 0; border-radius:14px; background:{{ voiceMaleBg }}; color:var(--color-text); font-size:14px; font-weight:600; cursor:pointer; border:1px solid {{ voiceMaleBorder }};">Male</div>
+          </div>
+
+          <div onClick="{{ testVoice }}" style="margin-top:16px; width:100%; padding:14px 0; text-align:center; border-radius:999px; background:var(--color-surface); color:var(--color-text); font-size:15px; font-weight:600; cursor:pointer;">{{ testVoiceLabel }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LANGS = [
+  { code: 'am', flag: '🇦🇲', label: 'Armenian', native: 'Հայերեն' },
+  { code: 'nl', flag: '🇳🇱', label: 'Dutch', native: 'Nederlands' },
+  { code: 'en', flag: '🇬🇧', label: 'English', native: 'English' },
+  { code: 'ru', flag: '🇷🇺', label: 'Russian', native: 'Русский' },
+  { code: 'fr', flag: '🇫🇷', label: 'French', native: 'Français' },
+];
+
+const PROCESSING_LABELS = ['Reading document...', 'Translating to Armenian...', 'Generating voice...'];
+
+const TRANSCRIPT_AM = 'Սա Ձեզ ուղարկված մունիցիպալ հարկային ծանուցագիր է։ Ձեզանից պահանջվում է վճարել 125,00 եվրո մինչև 2026 թվականի հոկտեմբերի 15-ը։ Վճարումը կատարելու համար օգտագործեք նամակում նշված հղումը կամ բանկային մանրամասները։';
+
+// Common Belgian government letter categories the Gemini prompt will classify into.
+// Each has its own tag treatment and field set — "rows" are what the AI extracts and shows.
+const DOC_TYPES = [
+  {
+    id: 'tax', chipLabel: 'Municipal Tax', tagLabel: 'Payment Required', tagClass: 'tag tag-accent',
+    title: 'Municipal Tax / Gemeentebelasting',
+    rows: [
+      { label: 'Amount due', value: '€ 125,00', color: 'var(--color-text)', size: '19px' },
+      { label: 'Payment reference', value: '+++091/2144/78960+++', color: 'var(--color-text)', size: '14px' },
+      { label: 'Deadline', value: '15 Oct 2026', color: 'var(--color-accent-700)', size: '16px' },
+    ],
+  },
+  {
+    id: 'fine', chipLabel: 'GAS Fine', tagLabel: 'Fine', tagClass: 'tag tag-accent',
+    title: 'Municipal Administrative Fine / GAS-boete',
+    rows: [
+      { label: 'Amount due', value: '€ 58,00', color: 'var(--color-text)', size: '19px' },
+      { label: 'Reason', value: 'Illegal parking — Rue de la Loi', color: 'var(--color-text)', size: '14px' },
+      { label: 'Deadline', value: '30 days from notice', color: 'var(--color-accent-700)', size: '16px' },
+    ],
+  },
+  {
+    id: 'refund', chipLabel: 'Tax Refund', tagLabel: 'Refund', tagClass: 'tag tag-accent-2',
+    title: 'Personal Income Tax / Aanslagbiljet Personenbelasting',
+    rows: [
+      { label: 'Refund amount', value: '€ 340,00', color: 'var(--color-accent-2-700)', size: '19px' },
+      { label: 'Expected payment', value: 'Within 6 weeks', color: 'var(--color-text)', size: '14px' },
+      { label: 'Reference', value: 'Aanslagnr. 2026-00123456', color: 'var(--color-text)', size: '14px' },
+    ],
+  },
+  {
+    id: 'jury', chipLabel: 'Jury Duty', tagLabel: 'Action Required', tagClass: 'tag tag-accent-2',
+    title: 'Jury Duty Summons / Oproeping tot Juryplicht',
+    rows: [
+      { label: 'Date & time', value: '12 Nov 2026, 09:00', color: 'var(--color-text)', size: '16px' },
+      { label: 'Location', value: 'Brussels Law Courts', color: 'var(--color-text)', size: '14px' },
+      { label: 'Respond by', value: '20 Oct 2026', color: 'var(--color-accent-700)', size: '16px' },
+    ],
+  },
+  {
+    id: 'renewal', chipLabel: 'Permit Renewal', tagLabel: 'Renewal Due', tagClass: 'tag tag-neutral',
+    title: 'Residence Permit Renewal / Verlenging Verblijfsvergunning',
+    rows: [
+      { label: 'Current expiry', value: '3 Dec 2026', color: 'var(--color-text)', size: '16px' },
+      { label: 'Renew before', value: '3 Nov 2026', color: 'var(--color-accent-700)', size: '16px' },
+      { label: 'Where', value: 'Commune town hall', color: 'var(--color-text)', size: '14px' },
+    ],
+  },
+  {
+    id: 'cartax', chipLabel: 'Car Tax', tagLabel: 'Payment Required', tagClass: 'tag tag-accent',
+    title: 'Road Tax / Verkeersbelasting',
+    rows: [
+      { label: 'License plate', value: '1-ABC-123', isPlate: true },
+      { label: 'Amount due', value: '€ 389,50', color: 'var(--color-text)', size: '19px' },
+      { label: 'Deadline', value: '15 Jan 2027', color: 'var(--color-accent-700)', size: '16px' },
+    ],
+  },
+  {
+    id: 'carinsurance', chipLabel: 'Car Insurance', tagLabel: 'Renewal Due', tagClass: 'tag tag-neutral',
+    title: 'Motor Insurance Renewal / Verzekering Voertuig',
+    rows: [
+      { label: 'License plate', value: '1-ABC-123', isPlate: true },
+      { label: 'Premium due', value: '€ 412,00', color: 'var(--color-text)', size: '19px' },
+      { label: 'Renew before', value: '1 Dec 2026', color: 'var(--color-accent-700)', size: '16px' },
+    ],
+  },
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: 'onboarding',
+    language: 'am',
+    processingStep: 0,
+    playing: true,
+    speed: 1.0,
+    showSettings: false,
+    voice: 'female',
+    flash: false,
+    testVoiceLabel: 'Tap to hear a sample',
+    docType: 'tax',
+  };
+
+  selectDocType = (id) => this.setState({ docType: id });
+
+  selectLanguage(code) { this.setState({ language: code }); }
+  finishOnboarding = () => this.setState({ screen: 'camera' });
+  openSettings = () => this.setState({ showSettings: true });
+  closeSettings = () => this.setState({ showSettings: false });
+  toggleFlash = () => this.setState(s => ({ flash: !s.flash }));
+  toggleSpeed = () => this.setState(s => ({ speed: s.speed === 1.0 ? 1.25 : 1.0 }));
+  togglePlay = () => this.setState(s => ({ playing: !s.playing }));
+  selectVoiceFemale = () => this.setState({ voice: 'female' });
+  selectVoiceMale = () => this.setState({ voice: 'male' });
+  testVoice = () => {
+    this.setState({ testVoiceLabel: 'Playing sample...' });
+    clearTimeout(this._testTimer);
+    this._testTimer = setTimeout(() => this.setState({ testVoiceLabel: 'Tap to hear a sample' }), 1600);
+  };
+
+  scanAnother = () => {
+    clearTimeout(this._procTimer1); clearTimeout(this._procTimer2); clearTimeout(this._procTimer3);
+    this.setState({ screen: 'camera', processingStep: 0, playing: true, speed: 1.0 });
+  };
+
+  capturePhoto = () => {
+    this.setState({ screen: 'processing', processingStep: 0 });
+    this._procTimer1 = setTimeout(() => this.setState({ processingStep: 1 }), 1100);
+    this._procTimer2 = setTimeout(() => this.setState({ processingStep: 2 }), 2200);
+    this._procTimer3 = setTimeout(() => this.setState({ screen: 'result', playing: true }), 3300);
+  };
+
+  componentWillUnmount() {
+    clearTimeout(this._procTimer1); clearTimeout(this._procTimer2); clearTimeout(this._procTimer3); clearTimeout(this._testTimer);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const active = LANGS.find(l => l.code === s.language);
+    const languages = LANGS.map(l => {
+      const selected = l.code === s.language;
+      return {
+        code: l.code, flag: l.flag, label: l.label, native: l.native, selected,
+        select: () => this.selectLanguage(l.code),
+        bg: selected ? 'var(--color-accent-100)' : 'var(--color-surface)',
+        border: selected ? 'var(--color-accent)' : 'var(--color-divider)',
+        shadow: selected ? '0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent)' : 'none',
+        settingsBg: selected ? 'var(--color-accent-100)' : 'transparent',
+      };
+    });
+
+    const waveBars = Array.from({ length: 28 }, (_, i) => ({
+      height: `${14 + Math.round(Math.sin(i * 0.7) * 8 + Math.abs(Math.sin(i * 1.9)) * 6)}px`,
+      color: i < 10 ? 'var(--color-accent-2-500)' : 'var(--color-neutral-300)',
+      delay: `${(i % 7) * 0.1}s`,
+    }));
+
+    const activeDocTypeRaw = DOC_TYPES.find(d => d.id === s.docType);
+    const activeDocType = {
+      ...activeDocTypeRaw,
+      rows: activeDocTypeRaw.rows.map(r => ({ ...r, notPlate: !r.isPlate })),
+    };
+    const docTypes = DOC_TYPES.map(d => ({
+      id: d.id, chipLabel: d.chipLabel, select: () => this.selectDocType(d.id),
+      chipClass: d.id === s.docType ? 'tag tag-accent' : 'tag tag-outline',
+    }));
+
+    return {
+      isOnboarding: s.screen === 'onboarding',
+      docTypes,
+      activeDocType,
+      isCamera: s.screen === 'camera',
+      isProcessing: s.screen === 'processing',
+      isResult: s.screen === 'result',
+      showSettings: s.showSettings,
+      languages,
+      activeLanguage: active,
+      finishOnboarding: this.finishOnboarding,
+      openSettings: this.openSettings,
+      closeSettings: this.closeSettings,
+      capturePhoto: this.capturePhoto,
+      toggleFlash: this.toggleFlash,
+      flashColor: s.flash ? 'var(--color-accent)' : 'var(--color-text)',
+      processingStep: s.processingStep,
+      processingLabel: PROCESSING_LABELS[s.processingStep],
+      playing: s.playing,
+      notPlaying: !s.playing,
+      playState: s.playing ? 'running' : 'paused',
+      togglePlay: this.togglePlay,
+      toggleSpeed: this.toggleSpeed,
+      speedLabel: s.speed === 1.0 ? '1.0x' : '1.25x',
+      waveBars,
+      transcriptText: TRANSCRIPT_AM,
+      scanAnother: this.scanAnother,
+      selectVoiceFemale: this.selectVoiceFemale,
+      selectVoiceMale: this.selectVoiceMale,
+      voiceFemaleBg: s.voice === 'female' ? 'var(--color-accent-100)' : 'transparent',
+      voiceFemaleBorder: s.voice === 'female' ? 'var(--color-accent)' : 'var(--color-divider)',
+      voiceMaleBg: s.voice === 'male' ? 'var(--color-accent-100)' : 'transparent',
+      voiceMaleBorder: s.voice === 'male' ? 'var(--color-accent)' : 'var(--color-divider)',
+      testVoice: this.testVoice,
+      testVoiceLabel: s.testVoiceLabel,
+      ctaHover: { background: 'var(--color-accent-600)' },
+      ctaActive: { background: 'var(--color-accent-700)' },
+      shutterPressStyle: { transform: 'scale(0.94)' },
+    };
+  }
+}
+
+</script>
+</body>
+</html>
