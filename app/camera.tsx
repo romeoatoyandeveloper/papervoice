@@ -70,7 +70,13 @@ export default function Camera() {
     });
     if (result.canceled || !result.assets) return;
     addPages(
-      result.assets.map((a) => ({ uri: a.uri, mimeType: a.mimeType ?? 'image/jpeg', kind: 'image' as const })),
+      result.assets.map((a) => ({
+        uri: a.uri,
+        mimeType: a.mimeType ?? 'image/jpeg',
+        kind: 'image' as const,
+        width: a.width,
+        height: a.height,
+      })),
     );
   };
 
@@ -109,7 +115,13 @@ export default function Camera() {
       const picture = await cameraRef.current.takePictureAsync({ quality: 0.6, shutterSound: false });
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
       addPages([
-        { uri: picture.uri, mimeType: picture.format === 'png' ? 'image/png' : 'image/jpeg', kind: 'image' },
+        {
+          uri: picture.uri,
+          mimeType: picture.format === 'png' ? 'image/png' : 'image/jpeg',
+          kind: 'image',
+          width: picture.width,
+          height: picture.height,
+        },
       ]);
     } catch (e) {
       if (__DEV__) console.warn('takePictureAsync failed', e);

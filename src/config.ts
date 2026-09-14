@@ -39,12 +39,17 @@ export const languageFont = (weight: Weight = 400) => ({ fontFamily: fonts.armen
 export const env = {
   geminiApiKey: process.env.EXPO_PUBLIC_GEMINI_API_KEY ?? '',
   geminiModel: process.env.EXPO_PUBLIC_GEMINI_MODEL || 'gemini-3.8-flash',
+  // "low" measured ~3.5s vs ~10s at the model's default "medium", same result.
+  geminiThinking: process.env.EXPO_PUBLIC_GEMINI_THINKING || 'low',
   elevenLabsApiKey: process.env.EXPO_PUBLIC_ELEVENLABS_API_KEY ?? '',
+  // eleven_v3: reads the whole text reliably; the script is split and generated in
+  // parallel for speed (see elevenlabs.ts). eleven_v3_conversational is faster but
+  // cuts audio off mid-sentence; flash/multilingual v2 reject language_code "hy".
   elevenLabsModel: process.env.EXPO_PUBLIC_ELEVENLABS_MODEL || 'eleven_v3',
   voices: {
-    // ElevenLabs default voices "Sarah" and "George". Override in .env with
-    // voices from your own library.
-    female: process.env.EXPO_PUBLIC_ELEVENLABS_VOICE_FEMALE || 'EXAVITQu4vr4xnSDxMaL',
+    // Female: "Armenian Woman" from our ElevenLabs account (sounds far less robotic
+    // in Armenian than the English premade voices). Male: premade "George".
+    female: process.env.EXPO_PUBLIC_ELEVENLABS_VOICE_FEMALE || 'Uzip068RriboSuMJCIne',
     male: process.env.EXPO_PUBLIC_ELEVENLABS_VOICE_MALE || 'JBFqnCBsd6RMkjVDRZzb',
   } satisfies Record<VoiceGender, string>,
 };

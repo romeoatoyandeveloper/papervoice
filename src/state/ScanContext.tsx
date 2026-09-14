@@ -1,5 +1,6 @@
 import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import { File } from 'expo-file-system';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
 
 import { LANGUAGE, type Language, type VoiceGender } from '../config';
@@ -15,6 +16,33 @@ export interface Page {
   kind: 'image' | 'pdf';
   /** File name, for PDFs */
   name?: string;
+  /** Pixel size, when known (camera/library photos) */
+  width?: number;
+  height?: number;
+}
+
+/** Long edge photos are shrunk to before upload — still plenty for Gemini to read small print. */
+const MAX_IMAGE_EDGE = 2000;
+
+/** Downscales a large photo to cut upload time on mobile data; PDFs and small images pass through. */
+async function prepareForUpload(page: Page): Promise<{ uri: string; mimeType: string }> {
+  if (page.kind !== 'image') return page;
+  try {
+    let { width, height } = page;
+    if (!width || !height) {
+      const probe = await ImageManipulator.manipulate(page.uri).renderAsync();
+      ({ width, height } = probe);
+    }
+    if (Math.max(width, height) <= MAX_IMAGE_EDGE) return page;
+    const ref = await ImageManipulator.manipulate(page.uri)
+      .resize(width >= height ? { width: MAX_IMAGE_EDGE } : { height: MAX_IMAGE_EDGE })
+      .renderAsync();
+    const out = await ref.saveAsync({ compress: 0.75, format: SaveFormat.JPEG });
+    return { uri: out.uri, mimeType: 'image/jpeg' };
+  } catch (e) {
+    if (__DEV__) console.warn('Resize failed, uploading original', e);
+    return page;
+  }
 }
 
 /** Gemini's inline request limit is 20 MB; leave room for base64 overhead and the prompt. */
@@ -125,7 +153,9 @@ export function ScanProvider({ children }: { children: ReactNode }) {
 
       if (stage === 0) {
         setStatus({ phase: 'running', stage: 0 });
-        const totalBytes = j.pages.reduce((sum, p) => sum + (new File(p.uri).size ?? 0), 0);
+        const prepared = await Promise.all(j.pages.map(prepareForUpload));
+        if (!alive()) return;
+        const totalBytes = prepared.reduce((sum, p) => sum + (new File(p.uri).size ?? 0), 0);
         if (totalBytes > MAX_TOTAL_BYTES) {
           throw new PipelineError(
             'too-large',
@@ -133,7 +163,7 @@ export function ScanProvider({ children }: { children: ReactNode }) {
           );
         }
         const files = await Promise.all(
-          j.pages.map(async (p) => ({ base64: await new File(p.uri).base64(), mimeType: p.mimeType })),
+          prepared.map(async (p) => ({ base64: await new File(p.uri).base64(), mimeType: p.mimeType })),
         );
         if (!alive()) return;
         const result = await analyzeLetter(

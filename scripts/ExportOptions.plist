@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  How xcodebuild turns an .xcarchive into an .ipa App Store Connect accepts.
+
+  Kept in scripts/ rather than ios/, because ios/ is generated: `expo prebuild`
+  wipes and rewrites that directory, and this would go with it.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- The App Store channel. `development` or `ad-hoc` produce an .ipa that
+         installs on registered devices but that Apple's upload rejects. -->
+    <key>method</key>
+    <string>app-store-connect</string>
+
+    <key>teamID</key>
+    <string>YKVUBV84VS</string>
+
+    <!-- Let Xcode pick, and if necessary create, the distribution certificate
+         and App Store provisioning profile. Doing it by hand means keeping a
+         profile UUID in here that expires. -->
+    <key>signingStyle</key>
+    <string>automatic</string>
+
+    <!-- Symbols go up with the build, so crash reports in App Store Connect
+         are readable stack traces rather than hex addresses. -->
+    <key>uploadSymbols</key>
+    <true/>
+
+    <!-- The upload is altool's job here, not xcodebuild's: it validates first
+         and reports a delivery id we can poll. -->
+    <key>destination</key>
+    <string>export</string>
+</dict>
+</plist>

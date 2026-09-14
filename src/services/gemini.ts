@@ -196,6 +196,7 @@ export async function analyzeLetter(
         ],
         generationConfig: {
           temperature: 0.2,
+          thinkingConfig: { thinkingLevel: env.geminiThinking },
           responseMimeType: 'application/json',
           responseSchema: RESPONSE_SCHEMA,
         },

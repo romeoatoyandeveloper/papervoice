@@ -8,7 +8,12 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.papervoice.app"
+      "bundleIdentifier": "com.romeoatoyan.papervoice",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "appleTeamId": "YKVUBV84VS"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +23,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.papervoice.app"
+      "package": "com.romeoatoyan.papervoice"
     },
     "web": {
       "favicon": "./assets/favicon.png"

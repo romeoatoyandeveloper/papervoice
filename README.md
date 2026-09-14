@@ -21,8 +21,9 @@ If you edit `.env`, restart with `npx expo start --clear`. The keys are compiled
 | `EXPO_PUBLIC_GEMINI_API_KEY` | yes | Create one at [Google AI Studio → API keys](https://aistudio.google.com/apikey). |
 | `EXPO_PUBLIC_ELEVENLABS_API_KEY` | yes | Create one at [ElevenLabs → Settings → API keys](https://elevenlabs.io/app/settings/api-keys). It needs Text to Speech access. |
 | `EXPO_PUBLIC_GEMINI_MODEL` | no | Defaults to `gemini-3.8-flash`. `gemini-1.5-flash` and `gemini-2.0-flash` are shut down. |
-| `EXPO_PUBLIC_ELEVENLABS_MODEL` | no | Defaults to `eleven_v3`. Armenian needs this model because `eleven_multilingual_v2` doesn't support Armenian. |
-| `EXPO_PUBLIC_ELEVENLABS_VOICE_FEMALE` / `_MALE` | no | Voice IDs for the Female and Male options. The defaults are the ElevenLabs default voices "Sarah" and "George". ElevenLabs is retiring its default voices at the end of 2026, so pick replacements from your own voice library. |
+| `EXPO_PUBLIC_GEMINI_THINKING` | no | Defaults to `low`. Measured ~3.5s vs ~10s at the model's default `medium`, with the same result. |
+| `EXPO_PUBLIC_ELEVENLABS_MODEL` | no | Defaults to `eleven_v3`. It takes ~24s for a full script in one request, so the app splits the script into up to 3 sentence-aligned pieces, generates them in parallel and joins the MP3s. `eleven_v3_conversational` is faster but cuts the audio off mid-sentence. `eleven_flash_v2_5` and `eleven_multilingual_v2` reject Armenian. |
+| `EXPO_PUBLIC_ELEVENLABS_VOICE_FEMALE` / `_MALE` | no | Voice IDs for the Female and Male options. Female defaults to "Armenian Woman" (`Uzip068RriboSuMJCIne`, a voice on the account, which sounds much more natural in Armenian). Male defaults to the premade "George", which ElevenLabs retires at the end of 2026. |
 
 > ⚠️ `EXPO_PUBLIC_` variables are embedded in the app bundle, so anyone with the app can extract them. That's acceptable for development and testing. Before a public release, move both API calls behind a server (for example Expo API routes or a small backend) and remove the keys from the app.
 
